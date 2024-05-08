@@ -3,15 +3,26 @@ import Image from "next/image";
 import {getMeal} from "@/lib/meals";
 import {notFound} from "next/navigation";
 
-export default function MealsDetailPage({params}) {
+// generating dynamic metadata
+export async function generateMetadata({params}) {
+    const meal = getMeal(params.mealSlug)
 
-   const meal = getMeal(params.mealSlug)
-
-    if(!meal){
+    if (!meal) {
         notFound()
     }
 
-       meal.instructions = meal.instructions.replace(/\n/g, '<br />')
+    return {
+        title: meal.title,
+        description: meal.summary
+    }
+}
+
+export default function MealsDetailPage({params}) {
+
+    const meal = getMeal(params.mealSlug)
+
+
+    meal.instructions = meal.instructions.replace(/\n/g, '<br />')
 
     return (
         <>
